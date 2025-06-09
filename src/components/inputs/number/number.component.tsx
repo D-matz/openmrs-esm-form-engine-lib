@@ -13,19 +13,18 @@ import FieldLabel from '../../field-label/field-label.component';
 import FieldValueView from '../../value/view/field-value-view.component';
 import styles from './number.scss';
 
-
 const extractFieldUnitsAndRange = (concept?: Concept): string => {
   if (!concept) {
     return '';
   }
 
   const { hiAbsolute, lowAbsolute, units } = concept;
-  const displayUnits = units ? ` ${units}` : '';  
+  const displayUnits = units ? ` ${units}` : '';
   const hasLowerLimit = !isNil(lowAbsolute);
   const hasUpperLimit = !isNil(hiAbsolute);
 
   if (hasLowerLimit && hasUpperLimit) {
-      return `(${lowAbsolute} - ${hiAbsolute}${displayUnits})`;
+    return `(${lowAbsolute} - ${hiAbsolute}${displayUnits})`;
   } else if (hasUpperLimit) {
     return `(<= ${hiAbsolute}${displayUnits})`;
   } else if (hasLowerLimit) {
@@ -84,13 +83,16 @@ const NumberField: React.FC<FormFieldInputProps> = ({ field, value, errors, warn
           id={field.id}
           invalid={errors.length > 0}
           invalidText={errors[0]?.message}
-          label={<FieldLabel field={field} customLabel={t('fieldLabelWithUnitsAndRange', 
-            '{{fieldDescription}} {{unitsAndRange}}',
-            {
-              fieldDescription: t(field.label),
-              unitsAndRange: extractFieldUnitsAndRange(field.meta?.concept),
-              interpolation: { escapeValue: false }
-            })}/>}
+          label={
+            <FieldLabel
+              field={field}
+              customLabel={t(field.label, '{{fieldLabel}} {{unitsAndRange}}', {
+                fieldLabel: t(field.label),
+                unitsAndRange: extractFieldUnitsAndRange(field.meta?.concept),
+                interpolation: { escapeValue: false },
+              })}
+            />
+          }
           max={max}
           min={min}
           name={field.id}

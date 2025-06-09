@@ -30,7 +30,19 @@ const renderNodes = (reactNodes) => {
 };
 
 const useMock = [(k) => k, {}];
-useMock.t = (key, defaultValue) => defaultValue || key;
+useMock.t = (key, defaultValue, options = {}) => {
+  if (!defaultValue) {
+    return key;
+  }
+  let result = defaultValue;
+  const vars = { ...options };
+
+  result = result.replace(/{{\s*(\w+)\s*}}/g, (_, varName) => {
+    const value = vars[varName];
+    return value != null ? value : `{{${varName}}}`;
+  });
+  return result;
+};
 useMock.i18n = {};
 
 module.exports = {

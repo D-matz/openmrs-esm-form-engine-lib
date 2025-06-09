@@ -4,22 +4,6 @@ import { act, render, screen } from '@testing-library/react';
 import { useFormProviderContext } from '../../../provider/form-provider';
 import NumberField from './number.component';
 
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key, defaultValueOrOptions, options) => {
-      
-      if (typeof defaultValueOrOptions === 'object' && 'fieldDescription' in defaultValueOrOptions) {
-        return `${defaultValueOrOptions.fieldDescription} ${defaultValueOrOptions.unitsAndRange}`;
-      }
-      else if (typeof options === 'object' && 'unitsAndRange' in options) {
-        return `${options.fieldDescription} ${options.unitsAndRange}`;
-      }
-
-      return key;
-    }
-  })
-}));
-
 jest.mock('../../../provider/form-provider', () => ({
   useFormProviderContext: jest.fn(),
 }));
@@ -51,7 +35,7 @@ const numberFieldMockWithUnitsAndRange = {
       units: 'kg',
       lowAbsolute: 0,
       hiAbsolute: 200,
-    }
+    },
   },
   isHidden: false,
   isDisabled: false,
@@ -63,7 +47,7 @@ const numberFieldMockWithUnitsOnly = {
   meta: {
     concept: {
       units: 'kg',
-    }
+    },
   },
 };
 
@@ -73,7 +57,7 @@ const numberFieldMockWithRangeOnly = {
     concept: {
       lowAbsolute: 0,
       hiAbsolute: 200,
-    }
+    },
   },
 };
 
@@ -82,7 +66,7 @@ const numberFieldMockWithHiAbsoluteOnly = {
   meta: {
     concept: {
       hiAbsolute: 200,
-    }
+    },
   },
 };
 
@@ -91,10 +75,9 @@ const numberFieldMockWithLowAbsoluteOnly = {
   meta: {
     concept: {
       lowAbsolute: 0,
-    }
+    },
   },
 };
-
 
 const renderNumberField = async (props) => {
   await act(() => render(<NumberField {...props} />));
@@ -180,7 +163,7 @@ describe('NumberField Component', () => {
     expect(inputElement).toBeDisabled();
   });
 
-  it('renders units and range', async () => {    
+  it('renders units and range', async () => {
     await renderNumberField({
       field: numberFieldMockWithUnitsAndRange,
       value: '',
@@ -191,7 +174,7 @@ describe('NumberField Component', () => {
     expect(screen.getByLabelText('Weight (0 - 200 kg)')).toBeInTheDocument();
   });
 
-  it('renders units only', async () => {    
+  it('renders units only', async () => {
     await renderNumberField({
       field: numberFieldMockWithUnitsOnly,
       value: '',
@@ -202,7 +185,7 @@ describe('NumberField Component', () => {
     expect(screen.getByLabelText('Weight (kg)')).toBeInTheDocument();
   });
 
-  it('renders range only', async () => {    
+  it('renders range only', async () => {
     await renderNumberField({
       field: numberFieldMockWithRangeOnly,
       value: '',
@@ -213,7 +196,7 @@ describe('NumberField Component', () => {
     expect(screen.getByLabelText('Weight (0 - 200)')).toBeInTheDocument();
   });
 
-  it('renders hiAbsolute only', async () => {    
+  it('renders hiAbsolute only', async () => {
     await renderNumberField({
       field: numberFieldMockWithHiAbsoluteOnly,
       value: '',
@@ -224,7 +207,7 @@ describe('NumberField Component', () => {
     expect(screen.getByLabelText('Weight (<= 200)')).toBeInTheDocument();
   });
 
-  it('renders lowAbsolute only', async () => {    
+  it('renders lowAbsolute only', async () => {
     await renderNumberField({
       field: numberFieldMockWithLowAbsoluteOnly,
       value: '',
